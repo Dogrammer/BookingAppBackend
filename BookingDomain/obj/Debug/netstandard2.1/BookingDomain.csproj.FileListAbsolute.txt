@@ -1,0 +1,8 @@
+C:\Zavrsni\BookingApp\BookingDomain\bin\Debug\netstandard2.1\BookingDomain.deps.json
+C:\Zavrsni\BookingApp\BookingDomain\bin\Debug\netstandard2.1\BookingDomain.dll
+C:\Zavrsni\BookingApp\BookingDomain\bin\Debug\netstandard2.1\BookingDomain.pdb
+C:\Zavrsni\BookingApp\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.csproj.CoreCompileInputs.cache
+C:\Zavrsni\BookingApp\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.AssemblyInfoInputs.cache
+C:\Zavrsni\BookingApp\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.AssemblyInfo.cs
+C:\Zavrsni\BookingApp\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.dll
+C:\Zavrsni\BookingApp\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.pdb
