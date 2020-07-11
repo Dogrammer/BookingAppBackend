@@ -2,11 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BookingCore.Repository;
+using BookingCore.Services;
+using BookingDomain;
+using BookingDomain.Domain;
 using BookingInfrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,17 +34,36 @@ namespace BookingApi
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<User, Role>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
             services.AddControllers();
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(MyAllowSpecificOrigins,
-            //    builder =>
-            //    {
-            //        builder.WithOrigins("http://localhost:4200",
-            //                            "https://localhost:4200");
-            //    });
-            //});
+            services.AddCors();
+
+            services.AddScoped<DbContext, ApplicationDbContext>();
+
+            //register services
+            services.AddScoped<ICountryService, CountryService>();
+
+
+            //register repositories
+            //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            //services.AddScoped(typeof(ITrackableRepository<>), typeof(TrackableRepository<>));
+            services.AddTransient<ITrackableRepository<Country>, TrackableRepository<Country>>();
+
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddMaps(new[] {
+                    "BookingCore"
+                });
+            });
+
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(Startup));
 
             //services.AddSwaggerGen(c =>
             //{
@@ -45,10 +71,10 @@ namespace BookingApi
             //});
 
             services.AddDbContext<ApplicationDbContext>(options =>
-               options
-                   .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                   opt => opt.MigrationsAssembly("Botzilla.Infrastructure"))
-              );
+                options
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    opt => opt.MigrationsAssembly("BookingInfrastructure"))
+               );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,11 +87,8 @@ namespace BookingApi
 
             app.UseHttpsRedirection();
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             //app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             //app.UseSwaggerUI(c =>
             //{
             //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
@@ -73,7 +96,9 @@ namespace BookingApi
             //});
 
             app.UseRouting();
+
             app.UseCors(MyAllowSpecificOrigins);
+
             app.UseAuthentication();
 
             app.UseAuthorization();

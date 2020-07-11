@@ -7,3 +7,15 @@ C:\Zavrsni\BookingApp\BookingInfrastructure\bin\Debug\netstandard2.1\BookingInfr
 C:\Zavrsni\BookingApp\BookingInfrastructure\bin\Debug\netstandard2.1\BookingDomain.dll
 C:\Zavrsni\BookingApp\BookingInfrastructure\bin\Debug\netstandard2.1\BookingDomain.pdb
 C:\Zavrsni\BookingApp\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.csproj.CopyComplete
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\bin\Debug\netstandard2.1\BookingInfrastructure.deps.json
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\bin\Debug\netstandard2.1\BookingInfrastructure.dll
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\bin\Debug\netstandard2.1\BookingInfrastructure.pdb
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\bin\Debug\netstandard2.1\BookingDomain.dll
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\bin\Debug\netstandard2.1\BookingDomain.pdb
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.csprojAssemblyReference.cache
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.csproj.CoreCompileInputs.cache
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.AssemblyInfoInputs.cache
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.AssemblyInfo.cs
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.csproj.CopyComplete
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.dll
+C:\Zavrsni\BookingAppBackend\BookingInfrastructure\obj\Debug\netstandard2.1\BookingInfrastructure.pdb

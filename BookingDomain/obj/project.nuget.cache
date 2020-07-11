@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "O/PsrE0W21oX1fnG1y14uvWE+BYdN4yBFl1bwieCCauAAfaWIlAPD2hGIHNMBZslKpTOQAfSufee8rT9ZoLchQ==",
+  "dgSpecHash": "osBsjC0LRYQslbVJFyG5izfuIkDSXkOEuz99aQnSaxWMzFvMAglC8l57NunLrGVcl+wXbPSQAuBRiQ/hFrKuag==",
   "success": true,
-  "projectFilePath": "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj",
+  "projectFilePath": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nevio\\.nuget\\packages\\microsoft.aspnet.identity.core\\2.2.3\\microsoft.aspnet.identity.core.2.2.3.nupkg.sha512",
     "C:\\Users\\Nevio\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.5\\microsoft.aspnetcore.cryptography.internal.3.1.5.nupkg.sha512",

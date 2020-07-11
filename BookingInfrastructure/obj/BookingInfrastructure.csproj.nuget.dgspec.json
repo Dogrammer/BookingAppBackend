@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Zavrsni\\BookingApp\\BookingInfrastructure\\BookingInfrastructure.csproj": {}
+    "C:\\Zavrsni\\BookingAppBackend\\BookingInfrastructure\\BookingInfrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj": {
+    "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj",
+        "projectUniqueName": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj",
         "projectName": "BookingDomain",
-        "projectPath": "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj",
+        "projectPath": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj",
         "packagesPath": "C:\\Users\\Nevio\\.nuget\\packages\\",
-        "outputPath": "C:\\Zavrsni\\BookingApp\\BookingDomain\\obj\\",
+        "outputPath": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -73,14 +73,14 @@
         }
       }
     },
-    "C:\\Zavrsni\\BookingApp\\BookingInfrastructure\\BookingInfrastructure.csproj": {
+    "C:\\Zavrsni\\BookingAppBackend\\BookingInfrastructure\\BookingInfrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Zavrsni\\BookingApp\\BookingInfrastructure\\BookingInfrastructure.csproj",
+        "projectUniqueName": "C:\\Zavrsni\\BookingAppBackend\\BookingInfrastructure\\BookingInfrastructure.csproj",
         "projectName": "BookingInfrastructure",
-        "projectPath": "C:\\Zavrsni\\BookingApp\\BookingInfrastructure\\BookingInfrastructure.csproj",
+        "projectPath": "C:\\Zavrsni\\BookingAppBackend\\BookingInfrastructure\\BookingInfrastructure.csproj",
         "packagesPath": "C:\\Users\\Nevio\\.nuget\\packages\\",
-        "outputPath": "C:\\Zavrsni\\BookingApp\\BookingInfrastructure\\obj\\",
+        "outputPath": "C:\\Zavrsni\\BookingAppBackend\\BookingInfrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -99,8 +99,8 @@
         "frameworks": {
           "netstandard2.1": {
             "projectReferences": {
-              "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj": {
-                "projectPath": "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj"
+              "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj": {
+                "projectPath": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj"
               }
             }
           }

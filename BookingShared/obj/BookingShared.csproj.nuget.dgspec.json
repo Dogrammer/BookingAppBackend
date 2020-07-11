@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Zavrsni\\BookingApp\\BookingShared\\BookingShared.csproj": {}
+    "C:\\Zavrsni\\BookingAppBackend\\BookingShared\\BookingShared.csproj": {}
   },
   "projects": {
-    "C:\\Zavrsni\\BookingApp\\BookingShared\\BookingShared.csproj": {
+    "C:\\Zavrsni\\BookingAppBackend\\BookingShared\\BookingShared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Zavrsni\\BookingApp\\BookingShared\\BookingShared.csproj",
+        "projectUniqueName": "C:\\Zavrsni\\BookingAppBackend\\BookingShared\\BookingShared.csproj",
         "projectName": "BookingShared",
-        "projectPath": "C:\\Zavrsni\\BookingApp\\BookingShared\\BookingShared.csproj",
+        "projectPath": "C:\\Zavrsni\\BookingAppBackend\\BookingShared\\BookingShared.csproj",
         "packagesPath": "C:\\Users\\Nevio\\.nuget\\packages\\",
-        "outputPath": "C:\\Zavrsni\\BookingApp\\BookingShared\\obj\\",
+        "outputPath": "C:\\Zavrsni\\BookingAppBackend\\BookingShared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

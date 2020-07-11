@@ -1017,11 +1017,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj",
+      "projectUniqueName": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj",
       "projectName": "BookingDomain",
-      "projectPath": "C:\\Zavrsni\\BookingApp\\BookingDomain\\BookingDomain.csproj",
+      "projectPath": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\BookingDomain.csproj",
       "packagesPath": "C:\\Users\\Nevio\\.nuget\\packages\\",
-      "outputPath": "C:\\Zavrsni\\BookingApp\\BookingDomain\\obj\\",
+      "outputPath": "C:\\Zavrsni\\BookingAppBackend\\BookingDomain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8ZONW7HwPqe7Lh7EGLU3AEUJryONYCoLOfFHSRSDgOc4PRSELK309xBzDWLAaLakHGSKbfPOoqEO+ic0aCyDkw==",
+  "dgSpecHash": "Yijvn4cU/SgoNdJVhe0oaoGxNpahnp2iTEdXt/IrQHBEsdsnTaNAr2W82LDwD6IS2bi5GOh2fc1OGlfvCPPARg==",
   "success": true,
-  "projectFilePath": "C:\\Zavrsni\\BookingApp\\BookingShared\\BookingShared.csproj",
+  "projectFilePath": "C:\\Zavrsni\\BookingAppBackend\\BookingShared\\BookingShared.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
