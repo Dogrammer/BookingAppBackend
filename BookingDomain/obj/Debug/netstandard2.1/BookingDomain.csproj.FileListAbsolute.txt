@@ -14,3 +14,4 @@ C:\Zavrsni\BookingAppBackend\BookingDomain\obj\Debug\netstandard2.1\BookingDomai
 C:\Zavrsni\BookingAppBackend\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.AssemblyInfo.cs
 C:\Zavrsni\BookingAppBackend\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.dll
 C:\Zavrsni\BookingAppBackend\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.pdb
+C:\Zavrsni\BookingAppBackend\BookingDomain\obj\Debug\netstandard2.1\BookingDomain.csprojAssemblyReference.cache
