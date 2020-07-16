@@ -47,13 +47,29 @@ namespace BookingApi
 
             //register services
             services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<IApartmentGroupService, ApartmentGroupService>();
+            services.AddScoped<IApartmentService, ApartmentService>();
+            services.AddScoped<IApartmentTypeService, ApartmentTypeService>();
+            services.AddScoped<ICityService, CityService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IPricingPeriodService, PricingPeriodService>();
+            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IUserApartmentGroupService, UserApartmentGroupService>();
+
 
 
             //register repositories
             //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             //services.AddScoped(typeof(ITrackableRepository<>), typeof(TrackableRepository<>));
             services.AddTransient<ITrackableRepository<Country>, TrackableRepository<Country>>();
-
+            services.AddTransient<ITrackableRepository<ApartmentGroup>, TrackableRepository<ApartmentGroup>>();
+            services.AddTransient<ITrackableRepository<Apartment>, TrackableRepository<Apartment>>();
+            services.AddTransient<ITrackableRepository<ApartmentType>, TrackableRepository<ApartmentType>>();
+            services.AddTransient<ITrackableRepository<City>, TrackableRepository<City>>();
+            services.AddTransient<ITrackableRepository<Location>, TrackableRepository<Location>>();
+            services.AddTransient<ITrackableRepository<PricingPeriod>, TrackableRepository<PricingPeriod>>();
+            services.AddTransient<ITrackableRepository<Reservation>, TrackableRepository<Reservation>>();
+            services.AddTransient<ITrackableRepository<UserApartmentGroup>, TrackableRepository<UserApartmentGroup>>();
 
             var config = new MapperConfiguration(cfg =>
             {

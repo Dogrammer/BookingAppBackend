@@ -138,6 +138,12 @@ namespace BookingApi.Controllers.Auth
             }
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok("Uspjesno izlogiran user");
+        }
+
         //[HttpGet]
         //[Route("getEducationLevels")]
         //public async Task<IActionResult> GetEducationLevels()
