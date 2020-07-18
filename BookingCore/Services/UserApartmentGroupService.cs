@@ -6,13 +6,13 @@ using System.Text;
 
 namespace BookingCore.Services
 {
-    public class UserApartmentGroupService : Service<UserApartmentGroup>, IUserApartmentGroupService
-    {
-        public UserApartmentGroupService(ITrackableRepository<UserApartmentGroup> repository) : base(repository)
-        {
+    //public class UserApartmentGroupService : Service<UserApartmentGroup>, IUserApartmentGroupService
+    //{
+    //    public UserApartmentGroupService(ITrackableRepository<UserApartmentGroup> repository) : base(repository)
+    //    {
 
-        }
+    //    }
 
 
-    }
+    //}
 }

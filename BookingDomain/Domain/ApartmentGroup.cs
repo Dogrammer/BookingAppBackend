@@ -9,7 +9,9 @@ namespace BookingDomain.Domain
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<UserApartmentGroup> UserApartmentGroups { get; set; } = new HashSet<UserApartmentGroup>();
+        public long UserId { get; set; }
+
+        //public ICollection<UserApartmentGroup> UserApartmentGroups { get; set; } = new HashSet<UserApartmentGroup>();
 
     }
 }

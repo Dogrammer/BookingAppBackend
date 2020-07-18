@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BookingCore.Services
 {
-    public interface IUserApartmentGroupService : IService<UserApartmentGroup>
-    {
-    }
+    //public interface IUserApartmentGroupService : IService<UserApartmentGroup>
+    //{
+    //}
 }

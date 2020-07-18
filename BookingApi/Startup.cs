@@ -54,7 +54,7 @@ namespace BookingApi
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IPricingPeriodService, PricingPeriodService>();
             services.AddScoped<IReservationService, ReservationService>();
-            services.AddScoped<IUserApartmentGroupService, UserApartmentGroupService>();
+            //services.AddScoped<IUserApartmentGroupService, UserApartmentGroupService>();
 
 
 
@@ -69,7 +69,7 @@ namespace BookingApi
             services.AddTransient<ITrackableRepository<Location>, TrackableRepository<Location>>();
             services.AddTransient<ITrackableRepository<PricingPeriod>, TrackableRepository<PricingPeriod>>();
             services.AddTransient<ITrackableRepository<Reservation>, TrackableRepository<Reservation>>();
-            services.AddTransient<ITrackableRepository<UserApartmentGroup>, TrackableRepository<UserApartmentGroup>>();
+            //services.AddTransient<ITrackableRepository<UserApartmentGroup>, TrackableRepository<UserApartmentGroup>>();
 
             var config = new MapperConfiguration(cfg =>
             {

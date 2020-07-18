@@ -9,7 +9,7 @@ namespace BookingDomain
     public class User : IdentityUser<int>
     {
         public string Role { get; set; }
-        public ICollection<UserApartmentGroup> UserApartmentGroups { get; set; } = new HashSet<UserApartmentGroup>();
+        //public ICollection<UserApartmentGroup> UserApartmentGroups { get; set; } = new HashSet<UserApartmentGroup>();
 
     }
 }

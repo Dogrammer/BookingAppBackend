@@ -1,13 +1,11 @@
-﻿using BookingDomain.Domain;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BookingInfrastructure.ModelConfigurations
 {
-    //public class UserApartmentGroupConfiguration : IEntityTypeConfiguration<UserApartmentGroup>
+
+    //public class ApartmentPricingPeriodConfiguration : IEntityTypeConfiguration<UserApartmentGroup>
     //{
     //    public void Configure(EntityTypeBuilder<UserApartmentGroup> builder)
     //    {
