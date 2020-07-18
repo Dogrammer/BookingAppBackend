@@ -4,7 +4,9 @@ using System.Text;
 
 namespace BookingCore.RequestModels
 {
-    class CreatePricingPeriodRequest
+    public class CreatePricingPeriodRequest
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }
