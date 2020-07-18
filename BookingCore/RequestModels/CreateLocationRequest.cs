@@ -1,15 +1,13 @@
-﻿using BookingDomain.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BookingCore.RequestModels
 {
-    public class CreateApartmentGroupRequest
+    public class CreateLocationRequest
     {
-        //public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public long[] UserId { get; set; }
+        public long CityId { get; set; }
     }
 }

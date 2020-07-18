@@ -14,32 +14,32 @@ namespace BookingApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CountryController : ControllerBase
+    public class LocationController : ControllerBase
     {
-        private readonly ICountryService _countryService;
+        private readonly ILocationService _locationService;
         private readonly IMapper _mapper;
 
-        public CountryController(ICountryService countryService, IMapper mapper)
+        public LocationController(ILocationService locationService, IMapper mapper)
         {
-            _countryService = countryService;
+            _locationService = locationService;
             _mapper = mapper;
         }
         [HttpGet]
-        [Route("getCountries")]
-        public async Task<IActionResult> GetCountriesAsync()
+        [Route("getLocations")]
+        public async Task<IActionResult> GetLocations()
         {
-            var countries = await _countryService
+            var locations = await _locationService
                 .Queryable()
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
-            return Ok(countries);
+            return Ok(locations);
         }
 
         [HttpPost]
-        [Route("countries")]
-        public async Task<ActionResult> AddCountry(CreateCountryRequest request)
+        [Route("locations")]
+        public async Task<ActionResult> AddLocation(CreateLocationRequest request)
         {
             //var existing = await _apartmentGroupService
             //    .Queryable()
@@ -47,10 +47,10 @@ namespace BookingApi.Controllers
             //    .AsNoTracking()
             //    .SingleOrDefaultAsync();
 
-            var domain = _mapper.Map<Country>(request);
-            _countryService.Insert(domain);
+            var domain = _mapper.Map<Location>(request);
+            _locationService.Insert(domain);
 
-            await _countryService.Save();
+            await _locationService.Save();
 
             return Ok(domain);
 

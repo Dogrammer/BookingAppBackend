@@ -14,32 +14,32 @@ namespace BookingApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CountryController : ControllerBase
+    public class ApartmentTypeController : ControllerBase
     {
-        private readonly ICountryService _countryService;
+        private readonly IApartmentTypeService _apartmentTypeService;
         private readonly IMapper _mapper;
 
-        public CountryController(ICountryService countryService, IMapper mapper)
+        public ApartmentTypeController(IApartmentTypeService apartmentTypeService, IMapper mapper)
         {
-            _countryService = countryService;
+            _apartmentTypeService = apartmentTypeService;
             _mapper = mapper;
         }
         [HttpGet]
-        [Route("getCountries")]
-        public async Task<IActionResult> GetCountriesAsync()
+        [Route("getApartmentTypes")]
+        public async Task<IActionResult> GetApartmentTypes()
         {
-            var countries = await _countryService
+            var apartmentTypes = await _apartmentTypeService
                 .Queryable()
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
-            return Ok(countries);
+            return Ok(apartmentTypes);
         }
 
         [HttpPost]
-        [Route("countries")]
-        public async Task<ActionResult> AddCountry(CreateCountryRequest request)
+        [Route("apartmentTypes")]
+        public async Task<ActionResult> AddApartmentTypes(CreateApartmentTypeRequest request)
         {
             //var existing = await _apartmentGroupService
             //    .Queryable()
@@ -47,10 +47,10 @@ namespace BookingApi.Controllers
             //    .AsNoTracking()
             //    .SingleOrDefaultAsync();
 
-            var domain = _mapper.Map<Country>(request);
-            _countryService.Insert(domain);
+            var domain = _mapper.Map<ApartmentType>(request);
+            _apartmentTypeService.Insert(domain);
 
-            await _countryService.Save();
+            await _apartmentTypeService.Save();
 
             return Ok(domain);
 

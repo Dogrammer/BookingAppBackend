@@ -14,32 +14,32 @@ namespace BookingApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CountryController : ControllerBase
+    public class CityController : ControllerBase
     {
-        private readonly ICountryService _countryService;
+        private readonly ICityService _cityService;
         private readonly IMapper _mapper;
 
-        public CountryController(ICountryService countryService, IMapper mapper)
+        public CityController(ICityService cityService, IMapper mapper)
         {
-            _countryService = countryService;
+            _cityService = cityService;
             _mapper = mapper;
         }
         [HttpGet]
-        [Route("getCountries")]
-        public async Task<IActionResult> GetCountriesAsync()
+        [Route("getCities")]
+        public async Task<IActionResult> GetCitiesAsync()
         {
-            var countries = await _countryService
+            var cities = await _cityService
                 .Queryable()
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
-            return Ok(countries);
+            return Ok(cities);
         }
 
         [HttpPost]
-        [Route("countries")]
-        public async Task<ActionResult> AddCountry(CreateCountryRequest request)
+        [Route("cities")]
+        public async Task<ActionResult> AddCity(CreateCityRequest request)
         {
             //var existing = await _apartmentGroupService
             //    .Queryable()
@@ -47,10 +47,10 @@ namespace BookingApi.Controllers
             //    .AsNoTracking()
             //    .SingleOrDefaultAsync();
 
-            var domain = _mapper.Map<Country>(request);
-            _countryService.Insert(domain);
+            var domain = _mapper.Map<City>(request);
+            _cityService.Insert(domain);
 
-            await _countryService.Save();
+            await _cityService.Save();
 
             return Ok(domain);
 
