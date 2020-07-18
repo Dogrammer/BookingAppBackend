@@ -54,6 +54,8 @@ namespace BookingApi
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IPricingPeriodService, PricingPeriodService>();
             services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IPricingPeriodDetailService, PricingPeriodDetailService>();
+
             //services.AddScoped<IUserApartmentGroupService, UserApartmentGroupService>();
 
 
