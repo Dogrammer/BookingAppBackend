@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BookingDomain.Domain;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BookingCore.Services
 {
-    interface ILocationService
+    public interface ILocationService : IService<Location>
     {
     }
 }

@@ -1,10 +1,18 @@
-﻿using System;
+﻿using BookingCore.Repository;
+using BookingDomain.Domain;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BookingCore.Services
 {
-    class UserApartmentGroupService
+    public class UserApartmentGroupService : Service<UserApartmentGroup>, IUserApartmentGroupService
     {
+        public UserApartmentGroupService(ITrackableRepository<UserApartmentGroup> repository) : base(repository)
+        {
+
+        }
+
+
     }
 }
