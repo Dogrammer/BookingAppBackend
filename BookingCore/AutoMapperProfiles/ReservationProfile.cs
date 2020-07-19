@@ -7,11 +7,11 @@ using System.Text;
 
 namespace BookingCore.AutoMapperProfiles
 {
-    public class PricingPeriodDetailProfile : Profile
+    public class ReservationProfile : Profile
     {
-        public PricingPeriodDetailProfile()
+        public ReservationProfile()
         {
-            CreateMap<CreatePricingPeriodDetailRequest, PricingPeriodDetail>();
+            CreateMap<CreateReservationRequest, Reservation>();
         }
     }
 }

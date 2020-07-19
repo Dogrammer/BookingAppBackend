@@ -14,3 +14,4 @@ C:\Zavrsni\BookingAppBackend\BookingShared\obj\Debug\netstandard2.1\BookingShare
 C:\Zavrsni\BookingAppBackend\BookingShared\obj\Debug\netstandard2.1\BookingShared.AssemblyInfo.cs
 C:\Zavrsni\BookingAppBackend\BookingShared\obj\Debug\netstandard2.1\BookingShared.dll
 C:\Zavrsni\BookingAppBackend\BookingShared\obj\Debug\netstandard2.1\BookingShared.pdb
+C:\Zavrsni\BookingAppBackend\BookingShared\obj\Debug\netstandard2.1\BookingShared.csprojAssemblyReference.cache

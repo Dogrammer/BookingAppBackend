@@ -14,32 +14,32 @@ namespace BookingApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PricingPeriodController : ControllerBase
+    public class ReservationController : ControllerBase
     {
-        private readonly IPricingPeriodService _pricingPeriodService;
+        private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
 
-        public PricingPeriodController(IPricingPeriodService pricingPeriodService, IMapper mapper)
+        public ReservationController(IReservationService reservationService, IMapper mapper)
         {
-            _pricingPeriodService = pricingPeriodService;
+            _reservationService = reservationService;
             _mapper = mapper;
         }
         [HttpGet]
-        [Route("getPricingPeriods")]
-        public async Task<IActionResult> GetPricingPeriods()
+        [Route("getReservations")]
+        public async Task<IActionResult> GetReservations()
         {
-            var pricingPeriods = await _pricingPeriodService
+            var reservations = await _reservationService
                 .Queryable()
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
-            return Ok(pricingPeriods);
+            return Ok(reservations);
         }
 
         [HttpPost]
-        [Route("pricingPeriods")]
-        public async Task<ActionResult> AddPricingPeriod(CreatePricingPeriodRequest request)
+        [Route("reservations")]
+        public async Task<ActionResult> AddReservation(CreateReservationRequest request)
         {
             //var existing = await _apartmentGroupService
             //    .Queryable()
@@ -47,10 +47,10 @@ namespace BookingApi.Controllers
             //    .AsNoTracking()
             //    .SingleOrDefaultAsync();
 
-            var domain = _mapper.Map<PricingPeriod>(request);
-            _pricingPeriodService.Insert(domain);
+            var domain = _mapper.Map<Reservation>(request);
+            _reservationService.Insert(domain);
 
-            await _pricingPeriodService.Save();
+            await _reservationService.Save();
 
             return Ok(domain);
 

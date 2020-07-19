@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BookingCore.RequestModels;
 using BookingCore.Services;
 using BookingDomain.Domain;
 using Microsoft.AspNetCore.Http;

@@ -13,8 +13,12 @@ namespace BookingDomain.Domain
         public double Size { get; set; }
         public ApartmentType ApartmentType { get; set; }
         public long ApartmentTypeId { get; set; }
+        public ApartmentGroup ApartmentGroup { get; set; }
+        public long ApartmentGroupId { get; set; }
+        public Location Location { get; set; }
+        public long LocationId { get; set; }
 
-        public PricingPeriod PricingPeriod { get; set; }
+
         //public long PricingPeriodId { get; set; }
 
     }

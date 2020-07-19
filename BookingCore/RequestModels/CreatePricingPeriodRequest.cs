@@ -8,5 +8,6 @@ namespace BookingCore.RequestModels
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public long ApartmentId { get; set; }
     }
 }

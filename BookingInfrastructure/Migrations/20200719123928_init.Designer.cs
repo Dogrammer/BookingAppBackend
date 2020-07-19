@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingInfrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200712151840_addstringrole")]
-    partial class addstringrole
+    [Migration("20200719123928_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,9 @@ namespace BookingInfrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ApartmentGroupId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("ApartmentTypeId")
                         .HasColumnType("bigint");
@@ -52,20 +55,22 @@ namespace BookingInfrastructure.Migrations
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<long>("LocationId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("PricingPeriodId")
-                        .HasColumnType("bigint");
 
                     b.Property<double>("Size")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApartmentGroupId");
+
                     b.HasIndex("ApartmentTypeId");
 
-                    b.HasIndex("PricingPeriodId");
+                    b.HasIndex("LocationId");
 
                     b.ToTable("Apartments");
                 });
@@ -98,7 +103,15 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("ApartmentGroups");
                 });
@@ -259,6 +272,44 @@ namespace BookingInfrastructure.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long>("ApartmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApartmentId");
+
+                    b.ToTable("PricingPeriods");
+                });
+
+            modelBuilder.Entity("BookingDomain.Domain.PricingPeriodDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("datetimeoffset");
 
@@ -277,6 +328,9 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -286,12 +340,17 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PricingPeriodId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PricingPeriods");
+                    b.HasIndex("PricingPeriodId");
+
+                    b.ToTable("PricingPeriodDetails");
                 });
 
             modelBuilder.Entity("BookingDomain.Domain.Reservation", b =>
@@ -385,44 +444,6 @@ namespace BookingInfrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ReservationStatuses");
-                });
-
-            modelBuilder.Entity("BookingDomain.Domain.UserApartmentGroup", b =>
-                {
-                    b.Property<int>("ApartmentGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("ApartmentGroupId1")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateDeleted")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ApartmentGroupId", "UserId");
-
-                    b.HasIndex("ApartmentGroupId1");
-
-                    b.ToTable("UserApartmentGroups");
                 });
 
             modelBuilder.Entity("BookingDomain.Role", b =>
@@ -627,17 +648,30 @@ namespace BookingInfrastructure.Migrations
 
             modelBuilder.Entity("BookingDomain.Domain.Apartment", b =>
                 {
+                    b.HasOne("BookingDomain.Domain.ApartmentGroup", "ApartmentGroup")
+                        .WithMany()
+                        .HasForeignKey("ApartmentGroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BookingDomain.Domain.ApartmentType", "ApartmentType")
                         .WithMany()
                         .HasForeignKey("ApartmentTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BookingDomain.Domain.PricingPeriod", "PricingPeriod")
+                    b.HasOne("BookingDomain.Domain.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("PricingPeriodId")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BookingDomain.Domain.ApartmentGroup", b =>
+                {
+                    b.HasOne("BookingDomain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("BookingDomain.Domain.City", b =>
@@ -658,6 +692,24 @@ namespace BookingInfrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BookingDomain.Domain.PricingPeriod", b =>
+                {
+                    b.HasOne("BookingDomain.Domain.Apartment", "Apartment")
+                        .WithMany()
+                        .HasForeignKey("ApartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookingDomain.Domain.PricingPeriodDetail", b =>
+                {
+                    b.HasOne("BookingDomain.Domain.PricingPeriod", "PricingPeriod")
+                        .WithMany()
+                        .HasForeignKey("PricingPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BookingDomain.Domain.Reservation", b =>
                 {
                     b.HasOne("BookingDomain.Domain.Apartment", "Apartment")
@@ -673,19 +725,6 @@ namespace BookingInfrastructure.Migrations
                     b.HasOne("BookingDomain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("BookingDomain.Domain.UserApartmentGroup", b =>
-                {
-                    b.HasOne("BookingDomain.User", "User")
-                        .WithMany("UserApartmentGroups")
-                        .HasForeignKey("ApartmentGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BookingDomain.Domain.ApartmentGroup", "ApartmentGroup")
-                        .WithMany("UserApartmentGroups")
-                        .HasForeignKey("ApartmentGroupId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

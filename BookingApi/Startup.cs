@@ -71,6 +71,8 @@ namespace BookingApi
             services.AddTransient<ITrackableRepository<Location>, TrackableRepository<Location>>();
             services.AddTransient<ITrackableRepository<PricingPeriod>, TrackableRepository<PricingPeriod>>();
             services.AddTransient<ITrackableRepository<Reservation>, TrackableRepository<Reservation>>();
+            services.AddTransient<ITrackableRepository<PricingPeriodDetail>, TrackableRepository<PricingPeriodDetail>>();
+
             //services.AddTransient<ITrackableRepository<UserApartmentGroup>, TrackableRepository<UserApartmentGroup>>();
 
             var config = new MapperConfiguration(cfg =>
@@ -141,7 +143,10 @@ namespace BookingApi
 
             app.UseRouting();
 
-            app.UseCors(MyAllowSpecificOrigins);
+            
+            app.UseCors(
+                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            );
 
             app.UseAuthentication();
 
