@@ -38,7 +38,7 @@ namespace BookingApi.Controllers
         }
 
         [HttpGet]
-        [Route("getApartmentById/{id}")]
+        [Route("getApartmentByApartmentGroupId/{id}")]
         public async Task<IActionResult> GetApartmentById(long id)
         {
             var apartments = await _apartmentService
@@ -48,6 +48,19 @@ namespace BookingApi.Controllers
                 .ToListAsync();
 
             return Ok(apartments);
+        }
+
+        [HttpGet]
+        [Route("getApartment/{id}")]
+        public async Task<IActionResult> GetApartment(long id)
+        {
+            var apartment = await _apartmentService
+                .Queryable()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => !c.IsDeleted && c.Id == id);
+                
+
+            return Ok(apartment);
         }
 
         [HttpPost]
