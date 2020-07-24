@@ -1,4 +1,0 @@
-C:\Zavrsni\BookingApp\BookingInfrastructure\obj\Debug\netstandard2.0\BookingInfrastructure.csprojAssemblyReference.cache
-C:\Zavrsni\BookingApp\BookingInfrastructure\obj\Debug\netstandard2.0\BookingInfrastructure.csproj.CoreCompileInputs.cache
-C:\Zavrsni\BookingApp\BookingInfrastructure\obj\Debug\netstandard2.0\BookingInfrastructure.AssemblyInfoInputs.cache
-C:\Zavrsni\BookingApp\BookingInfrastructure\obj\Debug\netstandard2.0\BookingInfrastructure.AssemblyInfo.cs
