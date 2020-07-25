@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using BookingCore.JwtConstants;
 using BookingCore.RequestModels;
 using BookingDomain;
 using BookingInfrastructure;
@@ -48,6 +49,7 @@ namespace BookingApi.Controllers.Auth
         public async Task<IActionResult> Login([FromBody] CreateUserLoginRequest model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
+            //var role = _userManager.GetRolesAsync(user);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -56,6 +58,8 @@ namespace BookingApi.Controllers.Auth
                 {
                     Subject = new ClaimsIdentity(new Claim[]{
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(JwtClaimNameConstants.ROLE_CLAIM_NAME, user.Role),
+                    new Claim(JwtClaimNameConstants.USERNAME_CLAIM_NAME, user.UserName),
                     new Claim(ClaimTypes.Name, user.Email),
                     new Claim(ClaimTypes.Role, user.Role)
                     //new Claim(ClaimTypes.Role, role)

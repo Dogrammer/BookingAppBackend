@@ -93,7 +93,7 @@ namespace BookingApi
 
 
             //services.AddTransient<ITrackableRepository<UserApartmentGroup>, TrackableRepository<UserApartmentGroup>>();
-
+            services.AddDistributedMemoryCache();
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddMaps(new[] {
@@ -126,14 +126,20 @@ namespace BookingApi
 
             builder.AddSignInManager<SignInManager<User>>();
 
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidAudience = "https://localhost:5001",
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = "https://localhost:5001",

@@ -4,21 +4,25 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using BookingCore.Enums;
 using BookingCore.RequestModels;
 using BookingCore.Services;
 using BookingDomain.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace BookingApi.Controllers.Auth
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UploadController : ControllerBase
+    public class UploadController : BookingAuthController
     {
         private readonly IImageService _imageService;
 
-        public UploadController(IImageService imageService)
+        public UploadController(IImageService imageService, 
+                IHttpContextAccessor contextAccessor,
+                IDistributedCache distributedCache) : base(distributedCache,contextAccessor)
         {
             _imageService = imageService;
         }
@@ -28,6 +32,10 @@ namespace BookingApi.Controllers.Auth
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Upload([FromForm]ImportApartmentImage request)
         {
+            if (_jwtUserRole == RoleEnum.Admin || _jwtUserRole == RoleEnum.ApartmentManager)
+            {
+                return Ok("kurac");
+            }
             //tu spremi file u file storage 
             var folderName = Path.Combine("Resources", "Images");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
