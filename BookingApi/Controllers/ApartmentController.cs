@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookingCore.RequestModels;
 using BookingCore.Services;
+using BookingCore.ViewModels;
 using BookingDomain.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,16 @@ namespace BookingApi.Controllers
     {
         private readonly IApartmentService _apartmentService;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageService;
 
-        public ApartmentController(IApartmentService apartmentService, IMapper mapper)
+        public ApartmentController(
+            IApartmentService apartmentService, 
+            IMapper mapper,
+            IImageService imageService)
         {
             _apartmentService = apartmentService;
             _mapper = mapper;
+            _imageService = imageService;
         }
         [HttpGet]
         [Route("getApartments")]
@@ -50,17 +56,36 @@ namespace BookingApi.Controllers
             return Ok(apartments);
         }
 
+        
+
         [HttpGet]
         [Route("getApartment/{id}")]
         public async Task<IActionResult> GetApartment(long id)
         {
             var apartment = await _apartmentService
                 .Queryable()
+                .Include(a => a.ApartmentGroup)
+                .Include(a => a.ApartmentType)
+                .Include(a => a.Location)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => !c.IsDeleted && c.Id == id);
-                
 
-            return Ok(apartment);
+            var apartmentImages = _imageService.Queryable().Where(a => a.ApartmentId == id && !a.IsDeleted).Select(b => b.FilePath).ToList();
+
+            var returnView = new ApartmentDetailViewModel()
+            {
+                ApartmentGroup = apartment.ApartmentGroup,
+                ApartmentType = apartment.ApartmentType,
+                Location = apartment.Location,
+                Capacity = apartment.Capacity,
+                Description = apartment.Description,
+                Name = apartment.Name,
+                Size = apartment.Size,
+                Images = new List<string>(apartmentImages),
+
+            };
+
+            return Ok(returnView);
         }
 
         [HttpPost]

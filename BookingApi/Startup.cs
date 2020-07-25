@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,14 +9,18 @@ using BookingCore.Services;
 using BookingDomain;
 using BookingDomain.Domain;
 using BookingInfrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -39,6 +44,12 @@ namespace BookingApi
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
 
+            services.Configure<FormOptions>(o => {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
+
             services.AddControllers();
 
             services.AddCors();
@@ -55,6 +66,10 @@ namespace BookingApi
             services.AddScoped<IPricingPeriodService, PricingPeriodService>();
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IPricingPeriodDetailService, PricingPeriodDetailService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IImageService, ImageService>();
+
+
 
             //services.AddScoped<IUserApartmentGroupService, UserApartmentGroupService>();
 
@@ -72,6 +87,10 @@ namespace BookingApi
             services.AddTransient<ITrackableRepository<PricingPeriod>, TrackableRepository<PricingPeriod>>();
             services.AddTransient<ITrackableRepository<Reservation>, TrackableRepository<Reservation>>();
             services.AddTransient<ITrackableRepository<PricingPeriodDetail>, TrackableRepository<PricingPeriodDetail>>();
+            services.AddTransient<ITrackableRepository<User>, TrackableRepository<User>>();
+            services.AddTransient<ITrackableRepository<Image>, TrackableRepository<Image>>();
+
+
 
             //services.AddTransient<ITrackableRepository<UserApartmentGroup>, TrackableRepository<UserApartmentGroup>>();
 
@@ -107,7 +126,7 @@ namespace BookingApi
 
             builder.AddSignInManager<SignInManager<User>>();
 
-            services.AddAuthentication().AddJwtBearer(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
@@ -115,8 +134,9 @@ namespace BookingApi
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidAudience = "https://spark.ooo",
-                    ValidIssuer = "https://spark.ooo",
+                    ValidAudience = "https://localhost:5001",
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "https://localhost:5001",
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("A-VERY-STRONG-KEY-HERE"))
                 };
 
@@ -131,7 +151,7 @@ namespace BookingApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             //app.UseSwagger();
 
@@ -147,6 +167,13 @@ namespace BookingApi
             app.UseCors(
                 options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
             );
+
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
+            });
 
             app.UseAuthentication();
 

@@ -27,6 +27,8 @@ namespace BookingInfrastructure
         public DbSet<ReservationStatus> ReservationStatuses { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<PricingPeriodDetail> PricingPeriodDetails { get; set; }
+        public DbSet<Image> Images { get; set; }
+
 
         //public DbSet<UserApartmentGroup> UserApartmentGroups { get; set; }
 

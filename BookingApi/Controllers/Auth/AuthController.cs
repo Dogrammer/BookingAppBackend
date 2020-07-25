@@ -62,8 +62,8 @@ namespace BookingApi.Controllers.Auth
                     
 
                 }),
-                    Issuer = "https://spark.ooo",
-                    Audience = "https://spark.ooo",
+                    //Issuer = "https://spark.ooo",
+                    //Audience = "https://spark.ooo",
                     Expires = DateTime.Now.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("A-VERY-STRONG-KEY-HERE")), SecurityAlgorithms.HmacSha512Signature),
                 };
