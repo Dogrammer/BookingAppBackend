@@ -32,25 +32,43 @@ namespace BookingApi.Controllers
             _mapper = mapper;
             _userService = userService;
         }
+
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
-        [Route("getApartmentGroups")]
-        public async Task<IActionResult> getApartmentGroups()
+        [Route("getApartmentGroupsForAdmins")]
+        public async Task<IActionResult> GetApartmentGroupsForAdmins()
         {
-
+            var returnValues = new List<ApartmentGroup>();
+            var apartmentGroupsQuery =  _apartmentGroupService
+                .Queryable()
+                .AsNoTracking().Where(a => !a.IsDeleted);
+                
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            //var userId = User.FindFirst("sub").Value;
-
             var user = await _userService.GetUser(currentUserId);
 
+            if (user != null)
+            {
+                if (user.Role == "ApartmentManager")
+                {
+                    apartmentGroupsQuery = apartmentGroupsQuery.Where(a => a.UserId == user.Id);
+                    returnValues = apartmentGroupsQuery.ToList();
+                    return Ok(returnValues);
+                }
 
+                returnValues = apartmentGroupsQuery.ToList();
+                return Ok(returnValues);
+            }
 
+            return BadRequest("Authorization Fail");
+        }
 
-
+        [HttpGet]
+        [Route("getApartmentGroups")]
+        public async Task<IActionResult> GetApartmentGroups()
+        {
             var apartmentGroups = await _apartmentGroupService
                 .Queryable()
-                .AsNoTracking()
-                .Where(c => !c.IsDeleted && c.UserId == user.Id)
+                .AsNoTracking().Where(a => !a.IsDeleted)
                 .ToListAsync();
 
             return Ok(apartmentGroups);

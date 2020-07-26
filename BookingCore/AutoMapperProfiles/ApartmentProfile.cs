@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookingCore.RequestModels;
+using BookingCore.ViewModels;
 using BookingDomain.Domain;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace BookingCore.AutoMapperProfiles
         public ApartmentProfile()
         {
             CreateMap<CreateApartmentRequest, Apartment>();
+            CreateMap<Apartment, ApartmentDetailViewModel>();
         }
     }
 }
