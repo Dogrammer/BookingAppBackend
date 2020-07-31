@@ -21,17 +21,20 @@ namespace BookingApi.Controllers
     {
         private readonly IApartmentService _apartmentService;
         private readonly IMapper _mapper;
+        private readonly IApartmentGroupService _apartmentGroupService;
         private readonly IUserService _userService;
         private readonly IImageService _imageService;
 
         public ApartmentController(
             IApartmentService apartmentService, 
             IMapper mapper,
+            IApartmentGroupService apartmentGroupService,
             IUserService userService,
             IImageService imageService)
         {
             _apartmentService = apartmentService;
             _mapper = mapper;
+            _apartmentGroupService = apartmentGroupService;
             _userService = userService;
             _imageService = imageService;
         }
@@ -68,29 +71,41 @@ namespace BookingApi.Controllers
         {
             var returnValues = new List<Apartment>();
             var apartmentsQuery = _apartmentService
-                .Queryable()
+                .Queryable().Include(a => a.ApartmentGroup)
                 .AsNoTracking().Where(a => !a.IsDeleted);
 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _userService.GetUser(currentUserId);
+            var apartmentGroups = _apartmentGroupService.Queryable().Where(a => a.UserId == user.Id && id == a.Id).ToList();
+
+            if (apartmentGroups.Count <= 0)
+            {
+                return BadRequest("You are not admin of that apartment group");
+            }
 
             if (user != null)
             {
                 if (user.Role == "ApartmentManager")
                 {
-                    var userApartments = apartmentsQuery.Where(a => a.ApartmentGroup.User.Id == user.Id).Select(b => b.ApartmentGroupId).ToList();
-
-                    if (!userApartments.Contains(id))
-                    {
-                        return BadRequest("Authorization Fail");
-                    }
+                    //var userApartments = apartmentsQuery.Where(a => a.ApartmentGroup.User.Id == user.Id).Select(b => b.ApartmentGroupId).ToList();
+                    //var ifUserIsAdminOnRequestedApartmentGroup = apartmentsQuery.FirstOrDefault(a => a.ApartmentGroup.UserId == user.Id);
+                    //if (ifUserIsAdminOnRequestedApartmentGroup != null && !userApartments.Contains(id))
+                    //{
+                        //returnValues = apartmentsQuery.Where(a => a.ApartmentGroup.UserId == user.Id).ToList();
+                        //return Ok(returnValues);
+                    //}
+                    //if (!userApartments.Contains(id))
+                    //{
+                    //    return BadRequest("Authorization Fail");
+                    //}
 
                     apartmentsQuery = apartmentsQuery.Where(a => a.ApartmentGroup.UserId == user.Id);
                     returnValues = apartmentsQuery.ToList();
                     return Ok(returnValues);
                 }
 
-                returnValues = apartmentsQuery.ToList();
+                returnValues = apartmentsQuery.Where(a => a.ApartmentGroupId == id).ToList();
+
                 return Ok(returnValues);
             }
 
