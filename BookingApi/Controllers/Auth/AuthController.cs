@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookingCore.JwtConstants;
 using BookingCore.RequestModels;
+using BookingCore.Services;
 using BookingDomain;
 using BookingInfrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,7 @@ namespace BookingApi.Controllers.Auth
         private readonly IMapper _mapper;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly IUserService _userService;
         private readonly IConfiguration _config;
 
         public AuthController
@@ -34,11 +37,13 @@ namespace BookingApi.Controllers.Auth
             SignInManager<User> signInManager,
             IMapper mapper,
             UserManager<User> userManager,
+            IUserService userService,
             IConfiguration config
             )
         {
             _mapper = mapper;
             _userManager = userManager;
+            _userService = userService;
             _signInManager = signInManager;
             //_context = context;
             _config = config;
@@ -146,6 +151,36 @@ namespace BookingApi.Controllers.Auth
         {
             await _signInManager.SignOutAsync();
             return Ok("Uspjesno izlogiran user");
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("checkIfAdmin")]
+        public async Task<IActionResult> CheckIfAdmin()
+        {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = await _userService.GetUser(currentUserId);
+            if (user != null)
+            {
+                if (user.Role == "Admin")
+                {
+                    return Ok(true);
+                }
+
+                return Ok(false);
+            }
+            return BadRequest("Request Failure");
+        }
+
+        //[Authorize(Roles = "Admin")]
+        [Authorize]
+        [HttpGet]
+        [Route("getAllUsersWithApartmentManagerRole")]
+        public async Task<IActionResult> GetAllUsersWithApartmentManagerRole()
+        {
+            var usersWithRole = await _userManager.GetUsersInRoleAsync("ApartmentManager");
+            return Ok(usersWithRole);
+            
         }
 
         //[HttpGet]

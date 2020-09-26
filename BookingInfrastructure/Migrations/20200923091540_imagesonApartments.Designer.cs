@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingInfrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200719123928_init")]
-    partial class init
+    [Migration("20200923091540_imagesonApartments")]
+    partial class imagesonApartments
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,8 +34,20 @@ namespace BookingInfrastructure.Migrations
                     b.Property<long>("ApartmentTypeId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("BbqTools")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ClimateControl")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("ClosestBeachDistance")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ClosestMarketDistance")
+                        .HasColumnType("float");
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("datetimeoffset");
@@ -52,6 +64,9 @@ namespace BookingInfrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("KitchenTool")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -61,8 +76,17 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NumberOfBedrooms")
+                        .HasColumnType("int");
+
                     b.Property<double>("Size")
                         .HasColumnType("float");
+
+                    b.Property<bool>("Wifi")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WorkSpace")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -103,15 +127,12 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("UserId1")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ApartmentGroups");
                 });
@@ -225,6 +246,50 @@ namespace BookingInfrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("BookingDomain.Domain.Image", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ApartmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApartmentId");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("BookingDomain.Domain.Location", b =>
@@ -387,28 +452,22 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ReservationStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("ReservationStatusId1")
+                    b.Property<long>("ReservationStatusId")
                         .HasColumnType("bigint");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("UserId1")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApartmentId");
 
-                    b.HasIndex("ReservationStatusId1");
+                    b.HasIndex("ReservationStatusId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -671,7 +730,9 @@ namespace BookingInfrastructure.Migrations
                 {
                     b.HasOne("BookingDomain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookingDomain.Domain.City", b =>
@@ -679,6 +740,15 @@ namespace BookingInfrastructure.Migrations
                     b.HasOne("BookingDomain.Domain.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookingDomain.Domain.Image", b =>
+                {
+                    b.HasOne("BookingDomain.Domain.Apartment", "Apartment")
+                        .WithMany("Images")
+                        .HasForeignKey("ApartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -720,11 +790,15 @@ namespace BookingInfrastructure.Migrations
 
                     b.HasOne("BookingDomain.Domain.ReservationStatus", "ReservationStatus")
                         .WithMany()
-                        .HasForeignKey("ReservationStatusId1");
+                        .HasForeignKey("ReservationStatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingDomain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

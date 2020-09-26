@@ -12,8 +12,11 @@ namespace BookingDomain.Domain
         public DateTimeOffset DateFrom { get; set; }
         public DateTimeOffset DateTo { get; set; }
         public long Price { get; set; }
-        public PricingPeriod PricingPeriod { get; set; }
-        public long PricingPeriodId { get; set; }
+        //public PricingPeriod PricingPeriod { get; set; }
+        //public long PricingPeriodId { get; set; }
+
+        public long ApartmentId { get; set; }
+        public Apartment Apartment { get; set; }
         public bool IsActive { get; set; }
     }
 }

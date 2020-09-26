@@ -4,60 +4,22 @@ using BookingInfrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingInfrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200923111957_details")]
+    partial class details
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("BookingDomain.Domain.Address", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("CityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CountryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateDeleted")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("StreetNameAndNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("BookingDomain.Domain.Apartment", b =>
                 {
@@ -77,9 +39,6 @@ namespace BookingInfrastructure.Migrations
 
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
-
-                    b.Property<long>("CityId")
-                        .HasColumnType("bigint");
 
                     b.Property<bool>("ClimateControl")
                         .HasColumnType("bit");
@@ -102,9 +61,6 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -113,6 +69,9 @@ namespace BookingInfrastructure.Migrations
 
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("LocationId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -138,7 +97,7 @@ namespace BookingInfrastructure.Migrations
 
                     b.HasIndex("ApartmentTypeId");
 
-                    b.HasIndex("CityId");
+                    b.HasIndex("LocationId");
 
                     b.ToTable("Apartments");
                 });
@@ -744,21 +703,6 @@ namespace BookingInfrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("BookingDomain.Domain.Address", b =>
-                {
-                    b.HasOne("BookingDomain.Domain.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BookingDomain.Domain.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BookingDomain.Domain.Apartment", b =>
                 {
                     b.HasOne("BookingDomain.Domain.ApartmentGroup", "ApartmentGroup")
@@ -773,9 +717,9 @@ namespace BookingInfrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BookingDomain.Domain.City", "City")
+                    b.HasOne("BookingDomain.Domain.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("CityId")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

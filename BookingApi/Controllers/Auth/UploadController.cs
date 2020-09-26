@@ -8,6 +8,7 @@ using BookingCore.Enums;
 using BookingCore.RequestModels;
 using BookingCore.Services;
 using BookingDomain.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -16,26 +17,27 @@ namespace BookingApi.Controllers.Auth
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UploadController : BookingAuthController
+    public class UploadController : ControllerBase
     {
         private readonly IImageService _imageService;
 
-        public UploadController(IImageService imageService, 
-                IHttpContextAccessor contextAccessor,
-                IDistributedCache distributedCache) : base(distributedCache,contextAccessor)
+        public UploadController(IImageService imageService
+                ) 
         {
             _imageService = imageService;
         }
 
-
+        [AllowAnonymous]
         [Route("uploadApartmentImage")]
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Upload([FromForm]ImportApartmentImage request)
+        //public async Task<IActionResult> Upload(object)
+
         {
-            if (_jwtUserRole == RoleEnum.Admin || _jwtUserRole == RoleEnum.ApartmentManager)
-            {
-                return Ok("kurac");
-            }
+            //if (_jwtUserRole == RoleEnum.Admin || _jwtUserRole == RoleEnum.ApartmentManager)
+            //{
+            //    return Ok("kurac");
+            //}
             //tu spremi file u file storage 
             var folderName = Path.Combine("Resources", "Images");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
@@ -54,6 +56,7 @@ namespace BookingApi.Controllers.Auth
                 var newApartmentImage = new Image
                 {
                     ApartmentId = request.ApartmentId,
+                    //ApartmentId = 3,
                     Name = request.File.FileName,
                     FileType = Path.GetExtension(request.File.FileName),
                     FilePath = dbPath

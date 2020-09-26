@@ -12,8 +12,8 @@ namespace BookingDomain.Domain
         //public DateTimeOffset DateFrom { get; set; }
         //public DateTimeOffset DateTo { get; set; }
         //public double Price { get; set; }
-        public long ApartmentId { get; set; }
-        public Apartment Apartment { get; set; }
+        //public long ApartmentId { get; set; }
+        //public Apartment Apartment { get; set; }
 
     }
 }

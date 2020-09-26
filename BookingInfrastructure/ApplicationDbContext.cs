@@ -20,6 +20,8 @@ namespace BookingInfrastructure
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
         public DbSet<Apartment> Apartments { get; set; }
         public DbSet<ApartmentGroup> ApartmentGroups { get; set; }
         public DbSet<ApartmentType> ApartmentTypes { get; set; }
@@ -38,6 +40,8 @@ namespace BookingInfrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            
             //builder.SetDefaultValueForId();
             builder.LoadAllEntityConfigurations();
             builder.RemoveCascadeDelete();

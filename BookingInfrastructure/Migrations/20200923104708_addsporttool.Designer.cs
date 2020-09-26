@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingInfrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200725112803_addimageclass")]
-    partial class addimageclass
+    [Migration("20200923104708_addsporttool")]
+    partial class addsporttool
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,8 +34,20 @@ namespace BookingInfrastructure.Migrations
                     b.Property<long>("ApartmentTypeId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("BbqTools")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ClimateControl")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("ClosestBeachDistance")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ClosestMarketDistance")
+                        .HasColumnType("float");
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("datetimeoffset");
@@ -52,6 +64,9 @@ namespace BookingInfrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("KitchenTool")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("datetimeoffset");
 
@@ -61,8 +76,20 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NumberOfBedrooms")
+                        .HasColumnType("int");
+
                     b.Property<double>("Size")
                         .HasColumnType("float");
+
+                    b.Property<bool>("SportTool")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Wifi")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WorkSpace")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -428,28 +455,22 @@ namespace BookingInfrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ReservationStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("ReservationStatusId1")
+                    b.Property<long>("ReservationStatusId")
                         .HasColumnType("bigint");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("UserId1")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApartmentId");
 
-                    b.HasIndex("ReservationStatusId1");
+                    b.HasIndex("ReservationStatusId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -772,11 +793,15 @@ namespace BookingInfrastructure.Migrations
 
                     b.HasOne("BookingDomain.Domain.ReservationStatus", "ReservationStatus")
                         .WithMany()
-                        .HasForeignKey("ReservationStatusId1");
+                        .HasForeignKey("ReservationStatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingDomain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -41,6 +42,7 @@ namespace BookingApi.Controllers
             var returnValues = new List<ApartmentGroup>();
             var apartmentGroupsQuery =  _apartmentGroupService
                 .Queryable()
+                .Include(a => a.User)
                 .AsNoTracking().Where(a => !a.IsDeleted);
                 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -73,24 +75,83 @@ namespace BookingApi.Controllers
 
             return Ok(apartmentGroups);
         }
-
+        [Authorize]
         [HttpPost]
         [Route("apartmentGroups")]
         public async Task<ActionResult> AddApartmentGroup(CreateApartmentGroupRequest request)
         {
-            //var existing = await _apartmentGroupService
-            //    .Queryable()
-            //    .Where(x => !x.IsDeleted && x.Id == request.Id)
-            //    .AsNoTracking()
-            //    .SingleOrDefaultAsync();
-
             var domain = _mapper.Map<ApartmentGroup>(request);
+
+            if (request.UserId == 0)
+            {
+                var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                domain.UserId = currentUserId;
+            }
+            else
+            {
+                domain.UserId = request.UserId;
+            }
+
             _apartmentGroupService.Insert(domain);
 
             await _apartmentGroupService.Save();
 
             return Ok(domain);
+        }
 
+        [Authorize]
+        [HttpPut]
+        [Route("editApartmentGroup/{id}")]
+        public async Task<ActionResult> EditApartmentGroup(long id, CreateApartmentGroupRequest request)
+        {
+            var existingApartmentGroup = _apartmentGroupService.Queryable().FirstOrDefault(x => x.Id == id);
+
+            if (existingApartmentGroup != null)
+            {
+                //existingApartmentGroup = _mapper.Map<ApartmentGroup>(request);
+                existingApartmentGroup.Name = request.Name;
+                existingApartmentGroup.Description = request.Description;
+                
+                if (request.UserId == 0)
+                {
+                    var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    existingApartmentGroup.UserId = currentUserId;
+                }
+                else
+                {
+                    existingApartmentGroup.UserId = request.UserId;
+                }
+
+                //_apartmentGroupService.Update(existingApartmentGroup);
+                
+
+                await _apartmentGroupService.Save();
+
+                return Ok(existingApartmentGroup);
+            }
+
+            return BadRequest("Apartment Group Invalid");
+            
+        }
+
+
+        [Authorize]
+        [HttpDelete]
+        [Route("deleteApartmentGroups/{id}")]
+        public async Task<ActionResult> DeleteApartmentGroups(long id)
+        {
+            var apartmentGroupToDelete = _apartmentGroupService.Queryable().FirstOrDefault(x => x.Id == id);
+
+            if (apartmentGroupToDelete != null)
+            {
+                _apartmentGroupService.Delete(apartmentGroupToDelete);
+
+                await _apartmentGroupService.Save();
+
+                return NoContent();
+            }
+
+            return BadRequest("Does not exist");
         }
     }
 }

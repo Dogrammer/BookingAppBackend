@@ -142,15 +142,14 @@ namespace BookingInfrastructure.Migrations
                     LastModified = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    UserId = table.Column<long>(nullable: false),
-                    UserId1 = table.Column<int>(nullable: true)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApartmentGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ApartmentGroups_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_ApartmentGroups_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -336,6 +335,34 @@ namespace BookingInfrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DateDeleted = table.Column<DateTimeOffset>(nullable: true),
+                    DeletedBy = table.Column<int>(nullable: true),
+                    DateCreated = table.Column<DateTimeOffset>(nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ApartmentId = table.Column<long>(nullable: false),
+                    FileType = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_Apartments_ApartmentId",
+                        column: x => x.ApartmentId,
+                        principalTable: "Apartments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PricingPeriods",
                 columns: table => new
                 {
@@ -378,8 +405,7 @@ namespace BookingInfrastructure.Migrations
                     ReservationStatusId = table.Column<int>(nullable: false),
                     ReservationStatusId1 = table.Column<long>(nullable: true),
                     TotalPrice = table.Column<double>(nullable: false),
-                    UserId1 = table.Column<int>(nullable: true),
-                    UserId = table.Column<long>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
                     ApartmentId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -398,8 +424,8 @@ namespace BookingInfrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Reservations_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -436,9 +462,9 @@ namespace BookingInfrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApartmentGroups_UserId1",
+                name: "IX_ApartmentGroups_UserId",
                 table: "ApartmentGroups",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Apartments_ApartmentGroupId",
@@ -500,6 +526,11 @@ namespace BookingInfrastructure.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Images_ApartmentId",
+                table: "Images",
+                column: "ApartmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Locations_CityId",
                 table: "Locations",
                 column: "CityId");
@@ -525,9 +556,9 @@ namespace BookingInfrastructure.Migrations
                 column: "ReservationStatusId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_UserId1",
+                name: "IX_Reservations_UserId",
                 table: "Reservations",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -546,6 +577,9 @@ namespace BookingInfrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "PricingPeriodDetails");
