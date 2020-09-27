@@ -6,6 +6,7 @@ using AutoMapper;
 using BookingCore.RequestModels;
 using BookingCore.Services;
 using BookingDomain.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,13 +31,14 @@ namespace BookingApi.Controllers
         {
             var cities = await _cityService
                 .Queryable()
+                .Include(x => x.Country)
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
                 .ToListAsync();
 
             return Ok(cities);
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         [Route("cities")]
         public async Task<ActionResult> AddCity(CreateCityRequest request)
@@ -55,5 +57,48 @@ namespace BookingApi.Controllers
             return Ok(domain);
 
         }
+
+        [Authorize (Roles ="Admin")]
+        [HttpPut]
+        [Route("editCity/{id}")]
+        public async Task<ActionResult> EditCity(long id, CreateCityRequest request)
+        {
+            var existing = _cityService.Queryable().FirstOrDefault(a => a.Id == id);
+
+            if (existing != null)
+            {
+                existing.Name = request.Name;
+                existing.Description = request.Description;
+                existing.CountryId = request.CountryId;
+
+                await _cityService.Save();
+
+                return Ok();
+            }
+
+            return BadRequest("Does not exist");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("deleteCity/{id}")]
+        public async Task<ActionResult> DeleteCity(long id)
+        {
+            var existing = _cityService.Queryable().FirstOrDefault(a => a.Id == id);
+
+            if (existing != null)
+            {
+                existing.IsDeleted = true;
+                existing.DateDeleted = DateTimeOffset.UtcNow;
+
+                await _cityService.Save();
+
+                return Ok();
+            }
+
+            return BadRequest("Does not exist");
+        }
+
+
     }
 }

@@ -6,6 +6,7 @@ using AutoMapper;
 using BookingCore.RequestModels;
 using BookingCore.Services;
 using BookingDomain.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace BookingApi.Controllers
             return Ok(countries);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("countries")]
         public async Task<ActionResult> AddCountry(CreateCountryRequest request)
@@ -55,5 +57,47 @@ namespace BookingApi.Controllers
             return Ok(domain);
 
         }
+
+        
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("editCountry/{id}")]
+        public async Task<ActionResult> EditCountry(long id, CreateCountryRequest request)
+        {
+            var existing = _countryService.Queryable().FirstOrDefault(a => a.Id == id);
+
+            if (existing != null)
+            {
+                existing.Name = request.Name;
+
+                await _countryService.Save();
+
+                return Ok();
+            }
+
+            return BadRequest("Does not exist");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("deleteCountry/{id}")]
+        public async Task<ActionResult> DeleteCountry(long id)
+        {
+            var existing = _countryService.Queryable().FirstOrDefault(a => a.Id == id);
+
+            if (existing != null)
+            {
+                existing.IsDeleted = true;
+                existing.DateDeleted = DateTimeOffset.UtcNow;
+
+                await _countryService.Save();
+
+                return Ok();
+            }
+
+            return BadRequest("Does not exist");
+        }
+
     }
 }

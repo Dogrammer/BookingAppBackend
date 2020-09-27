@@ -183,6 +183,31 @@ namespace BookingApi.Controllers.Auth
             
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("getUsers")]
+        public async Task<IActionResult> GetUsers()
+        {
+
+            var users = _userService.Queryable().Where(x => x.Role == "ApartmentManager").ToList();
+            var usersWithRole = await _userManager.GetUsersInRoleAsync("ApartmentManager");
+            return Ok(users);
+
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("deleteUser/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = _userService.Queryable().FirstOrDefault(x => x.Id == id);
+            _userService.Delete(user);
+            _userService.Save();
+            return Ok(user);
+
+        }
+
+
         //[HttpGet]
         //[Route("getEducationLevels")]
         //public async Task<IActionResult> GetEducationLevels()

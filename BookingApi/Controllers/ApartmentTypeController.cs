@@ -6,6 +6,7 @@ using AutoMapper;
 using BookingCore.RequestModels;
 using BookingCore.Services;
 using BookingDomain.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace BookingApi.Controllers
             return Ok(apartmentTypes);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("apartmentTypes")]
         public async Task<ActionResult> AddApartmentTypes(CreateApartmentTypeRequest request)
@@ -54,6 +56,46 @@ namespace BookingApi.Controllers
 
             return Ok(domain);
 
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("editApartmentType/{id}")]
+        public async Task<ActionResult> EditApartmentType(long id, CreateApartmentTypeRequest request)
+        {
+            var existing = _apartmentTypeService.Queryable().FirstOrDefault(a => a.Id == id);
+
+            if (existing != null)
+            {
+                existing.Name = request.Name;
+                existing.Description = request.Description;
+
+                await _apartmentTypeService.Save();
+
+                return Ok();
+            }
+
+            return BadRequest("Does not exist");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("deleteApartmentType/{id}")]
+        public async Task<ActionResult> DeleteApartmentType(long id)
+        {
+            var existing = _apartmentTypeService.Queryable().FirstOrDefault(a => a.Id == id);
+
+            if (existing != null)
+            {
+                existing.IsDeleted = true;
+                existing.DateDeleted = DateTimeOffset.UtcNow;
+
+                await _apartmentTypeService.Save();
+
+                return Ok();
+            }
+
+            return BadRequest("Does not exist");
         }
     }
 }
