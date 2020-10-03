@@ -6,7 +6,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookingApi.Controllers.Auth;
+using BookingApi.Extensions;
+using BookingApi.Helpers;
+using BookingApi.Helpers.ApartmentGroup;
 using BookingCore.RequestModels;
+using BookingCore.RequestModels.FilterRequests;
 using BookingCore.Services;
 using BookingDomain.Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -37,13 +41,17 @@ namespace BookingApi.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         [Route("getApartmentGroupsForAdmins")]
-        public async Task<IActionResult> GetApartmentGroupsForAdmins()
+        public async Task<IActionResult> GetApartmentGroupsForAdmins([FromQuery]ApartmentGroupParams apartmentGroupParams)
         {
+
             var returnValues = new List<ApartmentGroup>();
             var apartmentGroupsQuery =  _apartmentGroupService
                 .Queryable()
                 .Include(a => a.User)
                 .AsNoTracking().Where(a => !a.IsDeleted);
+
+            //var apartmentGroups = await PagedList<ApartmentGroup>.CreateAsync(apartmentGroupsQuery, apartmentGroupParams.PageNumber, apartmentGroupParams.PageSize);
+            //Response.AddPaginationHeader(apartmentGroups.CurrentPage, apartmentGroups.PageSize, apartmentGroups.TotalCount, apartmentGroups.TotalPages);
                 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _userService.GetUser(currentUserId);
@@ -53,12 +61,20 @@ namespace BookingApi.Controllers
                 if (user.Role == "ApartmentManager")
                 {
                     apartmentGroupsQuery = apartmentGroupsQuery.Where(a => a.UserId == user.Id);
-                    returnValues = apartmentGroupsQuery.ToList();
-                    return Ok(returnValues);
+                    
+                    var apartmentGroups = await PagedList<ApartmentGroup>.CreateAsync(apartmentGroupsQuery, apartmentGroupParams.PageNumber, apartmentGroupParams.PageSize);
+                    Response.AddPaginationHeader(apartmentGroups.CurrentPage, apartmentGroups.PageSize, apartmentGroups.TotalCount, apartmentGroups.TotalPages);
+
+                    return Ok(apartmentGroups);
                 }
 
-                returnValues = apartmentGroupsQuery.ToList();
-                return Ok(returnValues);
+                //returnValues = apartmentGroupsQuery.ToList();
+                //returnValues = apartmentGroupsQuery;
+
+                var apartmentGroupsAdmin = await PagedList<ApartmentGroup>.CreateAsync(apartmentGroupsQuery, apartmentGroupParams.PageNumber, apartmentGroupParams.PageSize);
+                Response.AddPaginationHeader(apartmentGroupsAdmin.CurrentPage, apartmentGroupsAdmin.PageSize, apartmentGroupsAdmin.TotalCount, apartmentGroupsAdmin.TotalPages);
+
+                return Ok(apartmentGroupsAdmin);
             }
 
             return BadRequest("Authorization Fail");

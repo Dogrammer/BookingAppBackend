@@ -80,7 +80,7 @@ namespace BookingApi.Controllers
             var returnValues = new List<Apartment>();
             var apartmentsQuery = _apartmentService
                 .Queryable().Include(a => a.ApartmentGroup)
-                .AsNoTracking().Where(a => !a.IsDeleted);
+                .AsNoTracking().Where(a => !a.IsDeleted && a.ApartmentGroupId == id);
 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var user = await _userService.GetUser(currentUserId);

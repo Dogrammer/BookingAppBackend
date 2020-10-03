@@ -68,26 +68,32 @@ namespace BookingApi.Controllers
             return Ok(retVal);
         }
 
+
+        [Authorize]
         [HttpPost]
         [Route("reservations")]
         public async Task<ActionResult> AddReservation(CreateReservationRequest request)
         {
-            //var existing = await _apartmentGroupService
-            //    .Queryable()
-            //    .Where(x => !x.IsDeleted && x.Id == request.Id)
-            //    .AsNoTracking()
-            //    .SingleOrDefaultAsync();
 
-            var domain = _mapper.Map<Reservation>(request);
-            _reservationService.Insert(domain);
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _reservationService.Save();
+            if (currentUserId > 0)
+            {
+                var domain = _mapper.Map<Reservation>(request);
+                domain.UserId = currentUserId;
+                domain.ReservationStatusId = 3;
+                _reservationService.Insert(domain);
 
-            return Ok(domain);
+                await _reservationService.Save();
+
+                return Ok(domain);
+            }
+
+            return Unauthorized();
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpGet]
         [Route("rejectReservation/{reservationId}")]
         public async Task<ActionResult> RejectReservation(long reservationId)
@@ -99,7 +105,7 @@ namespace BookingApi.Controllers
             if (existing != null)
             {
                 // status: canceled
-                existing.ReservationStatusId = 6;
+                existing.ReservationStatusId = 5;
             }
 
             await _reservationService.Save();
@@ -120,7 +126,7 @@ namespace BookingApi.Controllers
             if (existing != null)
             {
                 // status: reserved
-                existing.ReservationStatusId = 5;
+                existing.ReservationStatusId = 4;
             }
 
             await _reservationService.Save();
