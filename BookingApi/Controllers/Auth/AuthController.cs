@@ -146,11 +146,12 @@ namespace BookingApi.Controllers.Auth
                 return new JsonResult("Error Here"); ;
             }
         }
-
+        [HttpGet]
+        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok("Uspjesno izlogiran user");
+            return Ok();
         }
 
         [Authorize]

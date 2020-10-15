@@ -4,6 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using BookingApi.Extensions;
+using BookingApi.Helpers;
+using BookingApi.Helpers.Reservation;
 using BookingCore.Enums;
 using BookingCore.RequestModels;
 using BookingCore.Services;
@@ -12,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BookingApi.Extensions;
 
 namespace BookingApi.Controllers
 {
@@ -32,10 +36,42 @@ namespace BookingApi.Controllers
             _mapper = mapper;
             _userService = userService;
         }
+
+        [HttpPost]
+        [Route("checkAvailability")]
+        public async Task<IActionResult> CheckAvailability(CheckAvailabilityRequest checkAvailabilityRequest)
+        {
+            if ( checkAvailabilityRequest.DateTo != null && checkAvailabilityRequest.DateFrom != null)
+            {
+                var available = _reservationService.CheckAvailability(checkAvailabilityRequest);
+                
+                return Ok(available);
+
+            }
+
+            return BadRequest("Does not exist");
+            // dohvati sve rezervacije sa tim apartmanom
+            // 
+        }
+
+        [HttpPost]
+        [Route("getPrice")]
+        public async Task<IActionResult> GetPrice(GetPriceRequest getPriceRequest)
+        {
+            if (getPriceRequest.DateFrom != null && getPriceRequest.DateTo != null && getPriceRequest.ApartmentId > 0)
+            {
+                var getPrice = _reservationService.GetPriceForReservation(getPriceRequest);
+
+                return Ok(getPrice);
+            }
+
+            return BadRequest();
+        }
+
         [Authorize]
         [HttpGet]
         [Route("getReservationsForAdmin")]
-        public async Task<IActionResult> GetReservations()
+        public async Task<IActionResult> GetReservations([FromQuery]ReservationParams reservationParams)
         {
             var reservations = _reservationService
                .Queryable()
@@ -46,6 +82,10 @@ namespace BookingApi.Controllers
                .Where(c => !c.IsDeleted);
                //.ToListAsync();
 
+            // filter part 
+
+
+            // filter part end
 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -63,9 +103,12 @@ namespace BookingApi.Controllers
                 return Unauthorized();
             }
 
-            var retVal = reservations.ToList();
+            //var retVal = reservations.ToList();
 
-            return Ok(retVal);
+            var reservationsReturned = await PagedList<Reservation>.CreateAsync(reservations, reservationParams.PageNumber, reservationParams.PageSize);
+            Response.AddPaginationHeader(reservationsReturned.CurrentPage, reservationsReturned.PageSize, reservationsReturned.TotalCount, reservationsReturned.TotalPages);
+
+            return Ok(reservationsReturned);
         }
 
 

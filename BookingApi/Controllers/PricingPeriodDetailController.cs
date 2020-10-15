@@ -38,6 +38,25 @@ namespace BookingApi.Controllers
             return Ok(pricingPeriodDetails);
         }
 
+        [HttpGet]
+        [Route("getCurrentPricingPeriod/{apartmentId}")]
+        public async Task<IActionResult> GetCurrentPricingPeriod(long apartmentId)
+        {
+            if (apartmentId > 0)
+            {
+                var pricingPeriod = _pricingPeriodDetailService
+                    .Queryable()
+                    .FirstOrDefault(x => x.ApartmentId == apartmentId && DateTimeOffset.UtcNow.Date >= x.DateFrom && DateTimeOffset.UtcNow.Date <= x.DateTo);
+                
+                if (pricingPeriod != null)
+                {
+                    return Ok(pricingPeriod);
+                }
+            }
+
+            return BadRequest();
+        }
+
         [HttpPost]
         [Route("pricingPeriodDetails")]
         public async Task<ActionResult> AddPricingPeriodDetail(CreatePricingPeriodDetailRequest request)

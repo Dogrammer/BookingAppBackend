@@ -130,6 +130,7 @@ namespace BookingApi.Controllers
                 .Queryable()
                 .Include(a => a.ApartmentGroup)
                 .Include(a => a.ApartmentType)
+                .Include(a => a.City).ThenInclude(a => a.Country)
                 //.Include(a => a.Location)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => !c.IsDeleted && c.Id == id);
@@ -146,6 +147,18 @@ namespace BookingApi.Controllers
                 Name = apartment.Name,
                 Size = apartment.Size,
                 Images = new List<string>(apartmentImages),
+                BbqTools = apartment.BbqTools,
+                City = apartment.City,
+                ClimateControl = apartment.ClimateControl,
+                ClosestBeachDistance = apartment.ClosestBeachDistance,
+                ClosestMarketDistance = apartment.ClosestMarketDistance,
+                FullAddress = apartment.FullAddress,
+                KitchenTool = apartment.KitchenTool,
+                NumberOfBedrooms = apartment.NumberOfBedrooms,
+                SportTool = apartment.SportTool,
+                Wifi = apartment.Wifi,
+                WorkSpace = apartment.WorkSpace
+                
 
             };
 
@@ -263,6 +276,8 @@ namespace BookingApi.Controllers
 
         //    return Ok(retVal);
         //}
+
+        
 
         [Authorize]
         [HttpGet]

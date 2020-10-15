@@ -50,6 +50,11 @@ namespace BookingApi.Controllers
                 .Include(a => a.User)
                 .AsNoTracking().Where(a => !a.IsDeleted);
 
+            if (apartmentGroupParams.UserId > 0)
+            {
+                apartmentGroupsQuery = apartmentGroupsQuery.Where(x => x.UserId == apartmentGroupParams.UserId);
+            }
+
             //var apartmentGroups = await PagedList<ApartmentGroup>.CreateAsync(apartmentGroupsQuery, apartmentGroupParams.PageNumber, apartmentGroupParams.PageSize);
             //Response.AddPaginationHeader(apartmentGroups.CurrentPage, apartmentGroups.PageSize, apartmentGroups.TotalCount, apartmentGroups.TotalPages);
                 

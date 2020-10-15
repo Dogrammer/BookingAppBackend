@@ -20,5 +20,27 @@ namespace BookingCore.ViewModels
         public Location Location { get; set; }
         public long LocationId { get; set; }
 
+
+
+        public string FullAddress { get; set; }
+        public int NumberOfBedrooms { get; set; }
+        public bool ClimateControl { get; set; }
+        public bool KitchenTool { get; set; }
+        public bool Wifi { get; set; }
+        public bool BbqTools { get; set; }
+        public bool WorkSpace { get; set; }
+        public double ClosestBeachDistance { get; set; }
+        public double ClosestMarketDistance { get; set; }
+        public bool SportTool { get; set; }
+        //public Address Address { get; set; }
+        //public long AddressId { get; set; }
+
+
+        //public List<PricingPeriodDetail> PricingPeriodDetails { get; set; }
+        public City City { get; set; }
+        public long CityId { get; set; }
+        //public Address Address  { get; set; }
+        //public long PricingPeriodId { get; set; }
+
     }
 }
