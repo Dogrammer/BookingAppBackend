@@ -34,6 +34,8 @@ namespace BookingDomain.Domain
         //public List<PricingPeriodDetail> PricingPeriodDetails { get; set; }
         public City City { get; set; }
         public long CityId { get; set; }
+
+        public virtual ICollection<Image> Images { get; set; }
         //public Address Address  { get; set; }
         //public long PricingPeriodId { get; set; }
 

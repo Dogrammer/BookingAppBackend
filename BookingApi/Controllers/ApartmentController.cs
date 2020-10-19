@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using BookingApi.Extensions;
+using BookingApi.Helpers;
 using BookingCore.Repository;
 using BookingCore.RequestModels;
 using BookingCore.Services;
@@ -23,6 +25,7 @@ namespace BookingApi.Controllers
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IApartmentService _apartmentService;
+        private readonly IReservationService _reservationService;
         private readonly IMapper _mapper;
         private readonly IApartmentGroupService _apartmentGroupService;
         private readonly IUserService _userService;
@@ -32,14 +35,15 @@ namespace BookingApi.Controllers
         public ApartmentController(
             ApplicationDbContext applicationDbContext,
             IApartmentService apartmentService, 
+            IReservationService reservationService,
             IMapper mapper,
             IApartmentGroupService apartmentGroupService,
             IUserService userService,
-            //BookingCore.Repository.ITrackableRepository<Address> addressRepository,
             IImageService imageService)
         {
             _applicationDbContext = applicationDbContext;
             _apartmentService = apartmentService;
+            _reservationService = reservationService;
             _mapper = mapper;
             _apartmentGroupService = apartmentGroupService;
             _userService = userService;
@@ -65,9 +69,12 @@ namespace BookingApi.Controllers
         {
             var apartments = await _apartmentService
                 .Queryable()
+                .Include(x => x.Images)
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted && c.ApartmentGroupId == id)
                 .ToListAsync();
+            
+
 
             return Ok(apartments);
         }
@@ -164,6 +171,56 @@ namespace BookingApi.Controllers
 
             return Ok(returnView);
         }
+
+        [HttpGet]
+        [Route("getApartmentsPagination")]
+        public async Task<IActionResult> GetApartments([FromQuery] ApartmentParams apartmentParams)
+        {
+            var apartmentsQuery = _apartmentService
+                .Queryable()
+                .Include(x => x.Images)
+                .AsNoTracking().Where(a => !a.IsDeleted);
+
+            //var apartmentsQuery = _apartment
+
+            if (apartmentParams.CityId > 0)
+            {
+                apartmentsQuery = apartmentsQuery.Where(x => x.CityId == apartmentParams.CityId);
+            }
+
+            if (apartmentParams.Capacity > 0)
+            {
+                apartmentsQuery = apartmentsQuery.Where(x => x.Capacity == apartmentParams.Capacity);
+            }
+
+            if (apartmentParams.CityId > 0)
+            {
+                apartmentsQuery = apartmentsQuery.Where(x => x.CityId == apartmentParams.CityId);
+            }
+
+            if (apartmentParams.DateFrom != null && apartmentParams.DateTo != null)
+            {
+                
+                foreach (var apartment in apartmentsQuery)
+                {
+                    //dohvati za svaki apartman jeli dostupan ili ne, ako nije dostupan makni ga iz liste
+                    var isAvailable = _reservationService.CheckAvailability(new CheckAvailabilityRequest() { ApartmentId = apartment.Id, DateFrom = apartmentParams.DateFrom, DateTo = apartmentParams.DateTo });
+                    if (isAvailable == false)
+                    {
+                        apartmentsQuery = apartmentsQuery.Where(x => x.Id != apartment.Id);
+                    }
+                }
+            }
+
+            
+
+            var apartments = await PagedList<Apartment>.CreateAsync(apartmentsQuery, apartmentParams.PageNumber, apartmentParams.PageSize);
+            Response.AddPaginationHeader(apartments.CurrentPage, apartments.PageSize, apartments.TotalCount, apartments.TotalPages);
+
+            return Ok(apartments);
+        }
+
+
 
         [Authorize]
         [HttpGet]

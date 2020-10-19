@@ -31,13 +31,7 @@ namespace BookingApi.Controllers.Auth
         [Route("uploadApartmentImage")]
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Upload([FromForm]ImportApartmentImage request)
-        //public async Task<IActionResult> Upload(object)
-
         {
-            //if (_jwtUserRole == RoleEnum.Admin || _jwtUserRole == RoleEnum.ApartmentManager)
-            //{
-            //    return Ok("kurac");
-            //}
             //tu spremi file u file storage 
             var folderName = Path.Combine("Resources", "Images");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);

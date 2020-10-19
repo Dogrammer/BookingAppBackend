@@ -2,6 +2,7 @@
 using BookingDomain.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BookingCore.Services
@@ -12,6 +13,8 @@ namespace BookingCore.Services
         {
 
         }
+
+        //public IQueryable<ApartmentGroup> FilterApartmentGroup(IQueryable<ApartmentGroup> queryable, ApartmentGroupParams apartmentGroupParams)
 
 
     }

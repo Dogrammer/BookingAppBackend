@@ -14,6 +14,10 @@ namespace BookingCore.AutoMapperProfiles
         {
             CreateMap<CreateApartmentRequest, Apartment>();
             CreateMap<Apartment, ApartmentDetailViewModel>();
+            //CreateMap<Apartment, ApartmentListViewModel>()
+               //.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.))
+            //.ForMember(dest => dest.LongName, opt => opt.MapFrom(src => (src.KindergardenLivingRoom.KindergardenLocation != null ? src.KindergardenLivingRoom.KindergardenLocation.Name + " - " : "") + (src.KindergardenLivingRoom != null ? src.KindergardenLivingRoom.Name + " - " : "") + src.Name));
+
         }
     }
 }

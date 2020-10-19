@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -86,16 +88,29 @@ namespace BookingApi.Controllers
         }
 
         [HttpGet]
-        [Route("getApartmentGroups")]
-        public async Task<IActionResult> GetApartmentGroups()
+        [Route("getApartmentGroupsPagination")]
+        public async Task<IActionResult> GetApartmentGroups([FromQuery]ApartmentGroupParams apartmentGroupParams)
         {
-            var apartmentGroups = await _apartmentGroupService
+            var apartmentGroupsQuery = _apartmentGroupService
                 .Queryable()
-                .AsNoTracking().Where(a => !a.IsDeleted)
-                .ToListAsync();
+                .AsNoTracking().Where(a => !a.IsDeleted);
+
+            //var apartmentsQuery = _apartment
+
+            //if (apartmentGroupParams.CityId > 0)
+            //{
+            //    apartmentGroupsQuery = apartmentGroupsQuery.Where(x => x.)w
+            //}
+
+            // uzmi datume...dohvati dostupnost..
+
+            var apartmentGroups = await PagedList<ApartmentGroup>.CreateAsync(apartmentGroupsQuery, apartmentGroupParams.PageNumber, apartmentGroupParams.PageSize);
+            Response.AddPaginationHeader(apartmentGroups.CurrentPage, apartmentGroups.PageSize, apartmentGroups.TotalCount, apartmentGroups.TotalPages);
 
             return Ok(apartmentGroups);
         }
+
+
         [Authorize]
         [HttpPost]
         [Route("apartmentGroups")]
@@ -123,28 +138,56 @@ namespace BookingApi.Controllers
         [Authorize]
         [HttpPut]
         [Route("editApartmentGroup/{id}")]
-        public async Task<ActionResult> EditApartmentGroup(long id, CreateApartmentGroupRequest request)
+        public async Task<ActionResult> EditApartmentGroup(long id, [FromForm]ImportApartmentGroupImage request)
         {
             var existingApartmentGroup = _apartmentGroupService.Queryable().FirstOrDefault(x => x.Id == id);
-
+            
             if (existingApartmentGroup != null)
             {
-                //existingApartmentGroup = _mapper.Map<ApartmentGroup>(request);
-                existingApartmentGroup.Name = request.Name;
-                existingApartmentGroup.Description = request.Description;
-                
-                if (request.UserId == 0)
-                {
-                    var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    existingApartmentGroup.UserId = currentUserId;
-                }
-                else
-                {
-                    existingApartmentGroup.UserId = request.UserId;
-                }
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                //_apartmentGroupService.Update(existingApartmentGroup);
-                
+                if (request.File != null && request.File.Length > 0)
+                {
+
+                    // izbrisi staru sliku 
+                    var fileToDelete = Directory.GetFiles(folderName);
+
+                    foreach (var file in fileToDelete)
+                    {
+                        if (file == existingApartmentGroup.ImageFilePath)
+                        {
+                            System.IO.File.Delete(file);
+                        }
+                    }
+
+                    var fileName = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        request.File.CopyTo(stream);
+                    }
+
+                    existingApartmentGroup.ImageFilePath = dbPath;
+                    existingApartmentGroup.Name = request.Name;
+                    existingApartmentGroup.Description = request.Description;
+                    // fill the object for db
+
+
+                    if (request.UserId == 0)
+                    {
+                        var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                        existingApartmentGroup.UserId = currentUserId;
+                    }
+                    else
+                    {
+                        existingApartmentGroup.UserId = request.UserId;
+                    }
+
+                    //return Ok();
+                }
 
                 await _apartmentGroupService.Save();
 
@@ -173,6 +216,56 @@ namespace BookingApi.Controllers
             }
 
             return BadRequest("Does not exist");
+        }
+
+
+        [AllowAnonymous]
+        [Route("addApartmentGroup")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<IActionResult> Upload([FromForm]ImportApartmentGroupImage request)
+        {
+            //tu spremi file u file storage 
+            var folderName = Path.Combine("Resources", "Images");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (request.File.Length > 0)
+            {
+                var fileName = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    request.File.CopyTo(stream);
+                }
+
+                // fill the object for db
+                var newApartmentGroup = new ApartmentGroup();
+                newApartmentGroup.DateCreated = DateTimeOffset.UtcNow;
+                newApartmentGroup.Description = request.Description;
+                newApartmentGroup.ImageFilePath = dbPath;
+                newApartmentGroup.Name = request.Name;
+
+                if (request.UserId == 0)
+                {
+                    var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    newApartmentGroup.UserId = currentUserId;
+                }
+                else
+                {
+                    newApartmentGroup.UserId = request.UserId;
+                }
+
+                _apartmentGroupService.Attach(newApartmentGroup);
+                await _apartmentGroupService.Save();
+
+                return Ok();
+            }
+
+            else
+            {
+                return BadRequest("File size is 0");
+            }
         }
     }
 }
