@@ -101,7 +101,14 @@ namespace BookingApi.Controllers.Auth
 
             if (ModelState.IsValid)
             {
-                input.Role = "User";
+                if (input.WannabeManager == false)
+                {
+                    input.Role = "User";
+                }
+                else
+                {
+                    input.Role = "ApartmentManager";
+                }
                 //var user = new IdentityUser { UserName = input.Email, Email = input.Email };
                 //var user = new User { UserName = input.Email, Email = input.Email };
                 var mappedUser = _mapper.Map<User>(input);

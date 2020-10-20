@@ -15,5 +15,6 @@ namespace BookingCore.RequestModels
 
         public string Gender { get; set; }
         public string Role { get; set; }
+        public bool WannabeManager { get; set; }
     }
 }

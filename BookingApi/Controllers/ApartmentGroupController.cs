@@ -171,22 +171,24 @@ namespace BookingApi.Controllers
                     }
 
                     existingApartmentGroup.ImageFilePath = dbPath;
-                    existingApartmentGroup.Name = request.Name;
-                    existingApartmentGroup.Description = request.Description;
-                    // fill the object for db
-
-
-                    if (request.UserId == 0)
-                    {
-                        var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                        existingApartmentGroup.UserId = currentUserId;
-                    }
-                    else
-                    {
-                        existingApartmentGroup.UserId = request.UserId;
-                    }
+                    
 
                     //return Ok();
+                }
+
+                existingApartmentGroup.Name = request.Name;
+                existingApartmentGroup.Description = request.Description;
+                // fill the object for dbs
+
+
+                if (request.UserId == 0)
+                {
+                    var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    existingApartmentGroup.UserId = currentUserId;
+                }
+                else
+                {
+                    existingApartmentGroup.UserId = request.UserId;
                 }
 
                 await _apartmentGroupService.Save();

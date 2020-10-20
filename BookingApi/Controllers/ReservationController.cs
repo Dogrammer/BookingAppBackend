@@ -136,7 +136,7 @@ namespace BookingApi.Controllers
 
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize]
         [HttpGet]
         [Route("rejectReservation/{reservationId}")]
         public async Task<ActionResult> RejectReservation(long reservationId)
