@@ -86,7 +86,7 @@ namespace BookingApi.Controllers
         {
             var returnValues = new List<Apartment>();
             var apartmentsQuery = _apartmentService
-                .Queryable().Include(a => a.ApartmentGroup)
+                .Queryable().Include(a => a.ApartmentGroup).Include(a => a.Images)
                 .AsNoTracking().Where(a => !a.IsDeleted && a.ApartmentGroupId == id);
 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

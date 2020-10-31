@@ -120,7 +120,12 @@ namespace BookingApi.Controllers.Auth
 
                 if (result.Succeeded)
                 {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
+                    //var token = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
+                    //var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = user.Email }, Request.Scheme);
+                    //var message = new Message(new string[] { user.Email }, "Confirmation email link", confirmationLink, null);
+                    //await _emailSender.SendEmailAsync(message);
+                    //await _userManager.AddToRoleAsync(user, "Visitor");
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(mappedUser);
 
                     //DO YOUR STUFF HERE
 

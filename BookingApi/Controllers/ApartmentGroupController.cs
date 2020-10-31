@@ -210,7 +210,10 @@ namespace BookingApi.Controllers
 
             if (apartmentGroupToDelete != null)
             {
-                _apartmentGroupService.Delete(apartmentGroupToDelete);
+                //_apartmentGroupService.Delete(apartmentGroupToDelete);
+                apartmentGroupToDelete.IsDeleted = true;
+                apartmentGroupToDelete.DateDeleted = DateTimeOffset.UtcNow;
+
 
                 await _apartmentGroupService.Save();
 

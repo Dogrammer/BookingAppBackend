@@ -117,11 +117,11 @@ namespace BookingApi
                );
             IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
             {
+                opt.Password.RequiredLength = 7;
                 opt.Password.RequireDigit = false;
-                opt.Password.RequiredLength = 4;
-                opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireUppercase = false;
-                opt.Password.RequireLowercase = false;
+                opt.User.RequireUniqueEmail = true;
+                opt.SignIn.RequireConfirmedEmail = true;
             });
 
             builder.AddSignInManager<SignInManager<User>>();
